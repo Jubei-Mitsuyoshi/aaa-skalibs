@@ -1,0 +1,12 @@
+uint16.h
+uint32.h
+uint64.h
+ushort.h
+uint.h
+ulong.h
+direntry.h
+error.h
+select.h
+iopause.h
+shglob.h
+skalibs-config.h

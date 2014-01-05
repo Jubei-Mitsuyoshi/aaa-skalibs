@@ -1,0 +1,2 @@
+#undef HASDEVPTC
+/* sysdep: -devptc */

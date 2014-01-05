@@ -1,0 +1,8 @@
+
+--  If your system has the /dev/random device, the compilation might hang for
+-- several minutes on the next "choose" line. This is normal and depends on
+-- the amount of hardware entropy in the computer.
+--  To generate hardware entropy and allow the compilation process to resume,
+-- you can move the mouse around, or start other processes in parallel.
+-- You can also just wait for entropy to increase naturally.
+

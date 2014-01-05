@@ -1,0 +1,2 @@
+#undef HASSYSPOLLH
+/* sysdep: -syspollh */

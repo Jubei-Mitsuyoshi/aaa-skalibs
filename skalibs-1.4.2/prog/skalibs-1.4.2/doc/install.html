@@ -1,0 +1,157 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>skalibs: how to install</title>
+    <meta name="Description" content="skalibs: how to install" />
+    <meta name="Keywords" content="skalibs download installation install" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">skalibs</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">skarnet.org</a>
+</p>
+
+<h1> How to install skalibs </h1>
+
+<p>
+Like any other piece of software (and information generally),
+skalibs comes with NO WARRANTY.
+</p>
+
+<p>
+ skalibs is available under the terms of the
+<a href="http://en.wikipedia.org/wiki/ISC_license">ISC license</a>; see the
+included <tt>package/COPYING</tt> file.
+</p>
+
+<h2> Requirements </h2>
+
+<h3> System </h3>
+
+<ul>
+ <li> A Unix-like system </li>
+</ul>
+
+<h3> Build-time </h3>
+
+<ul>
+ <li> A standard C development environment </li>
+</ul>
+
+<h3> Run-time </h3>
+
+<p>
+ No dependencies. skalibs does not <em>run</em> per se; it's used in
+making other software run.
+</p>
+
+<h2> Installation </h2>
+
+<p>
+skalibs is best used with the
+<a href="http://cr.yp.to/slashpackage.html">slashpackage convention</a>,
+but it is not a hard requirement.
+</p>
+
+<ul>
+ <li> Create a <tt>/package</tt> directory:
+<pre>
+     mkdir -p /package
+     chmod 1755 /package
+     cd /package
+</pre>
+(If you are not following the slashpackage convention, you can use
+any temporary build directory instead.)
+ </li>
+
+ <li> Download the latest version of skalibs,
+<a href="skalibs-1.4.2.tar.gz">skalibs-1.4.2.tar.gz</a>,
+into <tt>/package</tt>. </li>
+
+<li> Unpack the skalibs package:
+<pre>
+     tar -zxpvf skalibs-1.4.2.tar.gz
+     # if you do not have GNU tar, check with your gunzip and tar manual pages.
+     rm skalibs-1.4.2.tar.gz
+     cd prog/skalibs-1.4.2
+</pre> </li>
+
+<li> If you're trying to build skalibs in a cross-compilation environment,
+then read <a href="crosscompile.html">that page</a>. <br /> <br />
+ The following instructions assume that you are installing skalibs as a native
+standalone package. </li>
+
+ <li> Configure the package by editing the files in <tt>conf-compile/</tt>
+following <a href="http://www.skarnet.org/software/conf-compile.html">these
+instructions</a>. </li>
+
+ <li> Be aware that if you want to link skarnet.org software with a
+different libc than the default (for instance if you're a Linux user
+and want to use the <a href="http://www.uclibc.org/">uClibc</a> or
+<a href="http://musl-libc.org/">musl</a> to make static
+executables), you will have to also compile skalibs with your chosen
+libc, so you need to modify <tt>conf-compile/conf-cc</tt>,
+<tt>conf-compile/conf-dynld</tt> and <tt>conf-compile/conf-ld</tt>
+accordingly. </li>
+
+ <li> If you want to change the default executable search path for the
+<tt>pathexec_run()</tt> function when the PATH environment variable is empty,
+also edit <tt>conf-defaultpath</tt>. </li>
+
+ <li> If you want EGD support for pseudorandom number generation,
+also edit <tt>conf-compile/conf-egd</tt>. </li>
+
+ <li> If you want global configuration files to go elsewhere than <tt>/etc</tt>,
+also edit <tt>conf-compile/conf-etc</tt>. </li>
+
+ <li> skalibs is now customizable via a set of compilation flags.
+Make sure to read <a href="flags.html">this page</a> to understand what
+they do and set the flags you need for your system. </li>
+
+ <li> Then compile and set up skalibs:
+<pre>
+     make
+     sudo make install
+</pre>
+
+ If you are following the slashpackage convention:
+ assuming that <tt>$prefix</tt> is the contents of <tt>conf-compile/conf-sp_root</tt>
+(i.e. empty by default:
+  <ul>
+   <li> you must have unzipped the skalibs tarball in <tt>$prefix/package</tt> </li>
+   <li> the libraries will be available under <tt>$prefix/package/prog/skalibs/library/</tt> </li>
+   <li> the shared libraries (if any) will be available under <tt>$prefix/package/prog/skalibs/library.so</tt> </li>
+   <li> the header files will be available under <tt>$prefix/package/prog/skalibs/include/</tt> </li>
+   <li> system-dependent files that other packages may use to automatically configure themselves
+for your system can be found under <tt>$prefix/package/prog/skalibs/sysdeps/</tt> </li>
+  </ul>
+  
+  If you are not following the slashpackage convention, you already have
+set up the installation paths via the
+ <a href="http://www.skarnet.org/software/conf-compile.html">conf-compile/conf-install-*</a>
+files.
+ </li>
+
+<li>
+ If you're going to move away from the default installation,
+  be aware that system-critical binaries may depend on skalibs and
+particularly <tt>libstddjb</tt>, so if your policy is to dynamically link
+everything anyway (as is the case for instance with GNU distributions),
+make sure that at least <tt>libstddjb.so</tt>, and if possible other
+<tt>.so</tt> files, are always on the root filesystem, i.e. in in
+<tt>/lib</tt> as opposed to <tt>/usr/lib</tt>. </li>
+
+<li> You can then delete the compilation temporary files. For a
+slashpackage installation, this is done with
+<pre>
+     make clean
+</pre> </li>
+
+</ul>
+
+</body>
+</html>

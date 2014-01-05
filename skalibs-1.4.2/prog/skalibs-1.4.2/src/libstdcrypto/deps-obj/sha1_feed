@@ -1,0 +1,4 @@
+sha1-internal.h
+sha1.h
+uint32.h
+bytestr.h

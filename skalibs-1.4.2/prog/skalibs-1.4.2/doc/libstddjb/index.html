@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>skalibs: the stddjb library interface</title>
+    <meta name="Description" content="skalibs: the stddjb library interface" />
+    <meta name="Keywords" content="skalibs stddjb libstddjb library interface" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://www.skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="../index.html">skalibs</a><br />
+<a href="http://www.skarnet.org/software/">Software</a><br />
+<a href="http://www.skarnet.org/">www.skarnet.org</a>
+</p>
+
+<h1> The <tt>stddjb</tt> library interface </h1>
+
+<p>
+ <tt>libstddjb</tt> is the base, and the most important part, of skalibs.
+It is a general-purpose C library wrapping some
+system calls, hiding some Unix portability problems, providing some
+basic low-level buffering functions and string handling, and generally
+offering a nice API to Unix programming - in many ways nicer and safer
+than the "standard" Unix APIs like <tt>stdio.h</tt>.
+</p>
+
+<p>
+ It is mostly based on some excellent code written and placed into the
+public domain by <a href="../djblegacy.html">D. J. Bernstein</a>.
+</p>
+
+<p>
+ <em>Every</em> executable from skarnet.org uses <tt>libstddjb</tt>. This
+library is where <em>secure, safe and small software</em> starts.
+</p>
+
+<h2> Compiling </h2>
+
+<ul>
+ <li> Add <tt>/package/prog/skalibs/include</tt>, or wherever you installed
+your header files, to your header directory list </li>
+ <li> Use <tt>#include "stddjb.h"</tt></li>
+</ul>
+
+<h2> Linking </h2>
+
+<ul>
+ <li> For static linking:
+ add <tt>/package/prog/skalibs/library</tt>, or wherever you installed
+your .a files, to your library directory list. </li>
+ <li> For dynamic linking:
+ add <tt>/package/prog/skalibs/library.so</tt>, or wherever you installed
+your .so files, to your library directory list - and make sure to properly
+edit your <tt>ld.so.conf</tt> file and to run <tt>ldconfig</tt> if needed. </li>
+ <li> Link with <tt>-lstddjb</tt> </li>
+</ul>
+
+<h2> Programming </h2>
+
+<p>
+ The <tt>stddjb.h</tt> header is actually a concatenation of other headers;
+every family of structures and functions has its own header, for clarity.
+</p>
+
+<ul>
+ <li> <a href="alloc.html">alloc.h</a>: basic heap memory allocation primitives </li>
+ <li> <a href="allreadwrite.html">allreadwrite.h</a>: <a href="safewrappers.html">safe
+wrappers</a> around I/O functions, extra I/O functions </li>
+ <li> <a href="bitarray.html">bitarray.h</a>: how to handle large arrays of bits </li>
+ <li> <a href="bufalloc.html">bufalloc.h</a>: bufferized output (with dynamically allocated buffers)</li>
+ <li> <a href="buffer.html">buffer.h</a>: bufferized I/O (with statically allocated buffers) </li>
+ <li> <a href="bytestr.html">bytestr.h</a>: basic operations on strings and byte arrays </li>
+ <li> <a href="cdb.html">cdb.h</a>: how to read
+<a href="http://en.wikipedia.org/wiki/Cdb_%28software%29">cdb</a> files </li>
+ <li> <a href="cdb_make.html">cdb_make.h</a>: how to write
+<a href="http://en.wikipedia.org/wiki/Cdb_%28software%29">cdb</a> files </li>
+ <li> <a href="djbtime.html">djbtime.h</a>: conversions between date and time formats </li>
+ <li> <a href="djbunix.html">djbunix.h</a>: management of basic Unix concepts </li>
+ <li> <a href="envalloc.html">envalloc.h</a>: management of dynamically allocated <em>argv</em> and <em>envp</em> </li>
+ <li> <a href="env.html">env.h</a>: management of <em>argv</em> and <em>envp</em> </li>
+ <li> <a href="fmtscan.html">fmtscan.h</a>: formatters (printers) and scanners (parsers) for basic C types </li>
+ <li> <a href="genalloc.html">genalloc.h</a>: generic advanced management of dynamically allocated structures </li>
+ <li> <a href="genwrite.html">genwrite.h</a>: interface to generic writes either to strallocs or to buffers </li>
+ <li> <a href="getpeereid.html">getpeereid.h</a>: the <tt>getpeereid()</tt> system call </li>
+ <li> <a href="iobuffer.html">iobuffer.h</a>: optimized data transfer from a fd to another </li>
+ <li> <a href="ip46.html">ip46.h</a>: IPv4/IPv6 abstraction layer </li>
+ <li> <a href="lolstdio.html">lolstdio.h</a>:
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/printf.html">printf</a>-like
+functions writing into <a href="buffer.html">buffers</a> or <a href="bufalloc.html">bufallocs</a> </li>
+ <li> <a href="mininetstring.html">mininetstring.h</a>: a protocol to transmit variable-length messages (limited to 64kB) </li>
+ <li> <a href="netstring.html">netstring.h</a>: a protocol to transmit variable-length messages (limited to 2^32 bytes) </li>
+ <li> <a href="segfault.html">segfault.h</a>: voluntary error generation </li>
+ <li> <a href="selfpipe.html">selfpipe.h</a>: automated selfpipe trick (i.e.
+how to safely handle signals in event loops) </li>
+ <li> <a href="sgetopt.html">sgetopt.h</a>: <tt>getopt()</tt>-style command-line options management </li>
+ <li> <a href="sig.html">sig.h</a>: safe signal management </li>
+ <li> <a href="skamisc.html">skamisc.h</a>: general string quoting and parsing; miscellaneous, unclassifiable functions </li>
+ <li> siovec.h:
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/sys_uio.h.html">iovec</a>-like
+structure for scatter/gather IO operations </li>
+ <li> <a href="socket.html">socket.h</a>: INET domain sockets </li>
+ <li> <a href="stralloc.html">stralloc.h</a>: advanced management of dynamically allocated strings </li>
+ <li> <a href="strerr.html">strerr.h</a>: basic error messages </li>
+ <li> <a href="strerr2.html">strerr2.h</a>: advanced error messages </li>
+ <li> <a href="tai.html">tai.h</a>: time, timers and system clock </li>
+ <li> <a href="webipc.html">webipc.h</a>: UNIX domain sockets </li>
+</ul>
+
+<p>
+ The following headers are automatically generated at compile-time, when the
+<em>headers</em> subsystem is made. The <tt>stddjb.h</tt> file also includes
+them, and the code they are associated with is part of the stddjb library.
+</p>
+
+<ul>
+ <li> <a href="direntry.html">direntry.h</a>: portable directory operations </li>
+ <li> <a href="error.html">error.h</a>: error and errno management </li>
+ <li> <a href="select.html">select.h</a>: <a href="safewrappers.html">safe
+wrappers</a> around
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/select.html">select()</a>
+(just in case you absolutely need to use <tt>select()</tt> instead of <tt>iopause()</tt>) </li>
+ <li> <a href="iopause.html">iopause.h</a>: the skalibs event loop selection function </li>
+ <li> <a href="shglob.html">shglob.h</a>: shell globbing </li>
+ <li> <a href="uint16.html">uint16.h</a>: 16-bit unsigned integers </li>
+ <li> <a href="uint32.html">uint32.h</a>: 32-bit unsigned integers </li>
+ <li> <a href="uint64.html">uint64.h</a>: 64-bit unsigned integers </li>
+ <li> <a href="ushort.html">ushort.h</a>: helpers for the "unsigned short" basic type </li>
+ <li> <a href="uint.html">uint.h</a>: helpers for the "unsigned int" basic type </li>
+ <li> <a href="ulong.html">ulong.h</a>: helpers for the "unsigned long" basic type </li>
+</ul>
+
+<p>
+ Additionally, <tt>stddjb.h</tt> also includes the following headers, which
+are not associated with any code and are mostly self-explanatory:
+</p>
+
+<ul>
+ <li> <a href="gccattributes.html">gccattributes.h</a>: wrappers around a few GCC-specific optimizations </li>
+ <li> <a href="diuint.h">diuint.h</a>: for associative arrays of unsigned integers </li>
+ <li> <a href="diuint32.h">diuint32.h</a>: for associative arrays of 32-bit unsigned integers </li>
+ <li> <a href="environ.h">environ.h</a>: declaration of the <em>environ</em> variable </li>
+ <li> <a href="nsig.h">nsig.h</a>: the number of system signals, for systems that do not define it </li>
+ <li> <a href="nonposix.h">nonposix.h</a>: feature test macros for non-POSIX-compliant systems </li>
+</ul>
+
+</body>
+</html>

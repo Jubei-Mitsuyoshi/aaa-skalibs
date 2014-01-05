@@ -1,0 +1,2 @@
+#undef HASUNIXH
+/* sysdep: -unixh */

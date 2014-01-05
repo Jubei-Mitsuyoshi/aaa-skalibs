@@ -1,0 +1,4 @@
+
+extern int dir_close (DIR *) ;
+
+#endif

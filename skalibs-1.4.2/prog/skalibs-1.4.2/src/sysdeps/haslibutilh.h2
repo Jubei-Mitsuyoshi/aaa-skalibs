@@ -1,0 +1,2 @@
+#define HASLIBUTILH
+/* sysdep: +libutilh */

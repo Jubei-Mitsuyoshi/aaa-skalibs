@@ -1,0 +1,18 @@
+#!/bin/sh -e
+# Public domain.
+
+umask 022
+test -d package -a -d src -a -d conf-compile || { echo 'Wrong working directory.' ; exit 100 ; }
+
+test -n "$1" || { echo "crossconfigure: usage: crossconfigure sysdepdir" ; exit 100 ; }
+test -d "$1" || { echo "crossconfigure: usage: crossconfigure sysdepdir" ; exit 100 ; }
+
+echo "Importing precompiled sysdeps files from $1..."
+for i in `cat src/systype/EXPORT-` `cat src/sysdeps/EXPORT-` ; do
+  test -f "$1/$i" || { echo "no $i file in $1"; exit 100 ; }
+  rm -f "compile/export/$i"
+  cp -f "$1/$i" compile/export/
+done
+echo
+
+exec package/compilesub sys

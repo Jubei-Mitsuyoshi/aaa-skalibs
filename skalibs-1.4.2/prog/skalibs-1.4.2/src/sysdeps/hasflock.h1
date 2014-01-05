@@ -1,0 +1,2 @@
+#undef HASFLOCK
+/* sysdep: -flock */

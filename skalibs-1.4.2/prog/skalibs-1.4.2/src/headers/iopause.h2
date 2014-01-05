@@ -1,0 +1,9 @@
+#include <sys/types.h>
+#include <poll.h>
+#include "tai.h"
+
+typedef struct pollfd iopause_fd, *iopause_fd_ref ;
+
+#define IOPAUSE_READ (POLLIN|POLLHUP)
+#define IOPAUSE_WRITE POLLOUT
+#define IOPAUSE_EXCEPT (POLLERR|POLLHUP|POLLNVAL)

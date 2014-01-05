@@ -1,0 +1,2 @@
+#undef HASBIG_ENDIAN
+/* sysdep: -big_endian */

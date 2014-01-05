@@ -1,0 +1,2 @@
+#define HASGETHRTIME
+/* sysdep: +gethrtime */

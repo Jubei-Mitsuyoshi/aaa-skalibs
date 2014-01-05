@@ -1,0 +1,5 @@
+#define HASULONG64
+#define SKALIBS_SIZEOFULONG 8
+#define SKALIBS_ULONG_BITS 64
+/* sysdep: +ulong64 */
+/* sysdep: sizeofulong: 8 */

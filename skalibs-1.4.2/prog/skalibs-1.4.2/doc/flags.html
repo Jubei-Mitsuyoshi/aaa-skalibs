@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>skalibs: compilation flags</title>
+    <meta name="Description" content="skalibs: compilation flags" />
+    <meta name="Keywords" content="skalibs build compilation flags options" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://www.skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">skalibs</a><br />
+<a href="../index.html">Software</a><br />
+<a href="../../index.html">www.skarnet.org</a>
+</p>
+
+<h1> skalibs compilation flags </h1>
+
+<p>
+Starting with release 1.0.0, skalibs can be configured via certain
+<em>compilation flags</em> and options. A flag is an empty file
+in the <tt>conf-compile/</tt> subdirectory of skalibs, with a name
+that starts with <tt>flag-</tt>. To set <em>flag-foobar</em>,
+perform <tt>touch conf-compile/flag-foobar</tt> before the build;
+to clear <em>flag-foobar</em>, remove the file.
+</p>
+
+<a name="allstatic"><h3> flag-allstatic </h3></a>
+
+<p>
+ The
+<a href="http://www.skarnet.org/software/conf-compile.html#flag">flag-allstatic</a>
+flag is supported by skalibs. If set, no .so libraries will be made,
+and the .a libraries will not be PIC. If clear, .so libraries will be
+made along .a libraries, and the latter ones will be PIC as well.
+</p>
+
+
+<a name="slashpackage"><h3> flag-slashpackage </h3></a>
+
+<p>
+ The
+<a href="http://www.skarnet.org/software/conf-compile.html#flag">flag-slashpackage</a>
+flag is also supported by skalibs. If it is set (default), a slashpackage installation
+will be assumed. If it is clear, a FHS installation will be assumed.
+</p>
+
+<a name="replace-libc"><h3> flag-replace-libc </h3></a>
+
+<p>
+ If <tt>flag-replace-libc</tt> is set, then the low-level components
+of <a href="libstddjb/">libstddjb</a>, such as <tt>byte_copy()</tt>,
+will be built using independent, failsafe implementations; skalibs will
+avoid relying on the libc when possible.
+</p>
+
+<p>
+ If <tt>flag-replace-libc</tt> is clear, then native libc primitives such as
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/memmove.html">memmove()</a>
+will be used for the low-levels components of libstddjb. This is the default.
+</p>
+
+<p>
+ This flag should be set if your libc has known bugs or you are uncertain
+of it for some reason. Standard libcs on modern systems have been thoroughly
+tested, so it's usually safe, and faster, to stick to the default.
+</p>
+
+<a name="clockistai"><h3> flag-clockistai </h3></a>
+
+<p>
+ To understand what this flag is about - and the next three flags too - you
+should start by reading
+<a href="http://www.madore.org/~david/computers/unix-leap-seconds.html">this
+page about Unix time</a>,
+which <a href="http://www.madore.org/~david/">David Madore</a> wrote after
+a long and fairly complete discussion we had on the subject. You can also
+read <a href="http://cr.yp.to/proto/utctai.html">what DJB says about Unix time</a>.
+Unfortunately, when he says "the POSIX rules are so outrageously dumb (...)
+that no self-respecting engineer would obey them", DJB is wrong: a lot of
+people follow the POSIX rules. Or maybe he's right... and there are very,
+very few self-respecting engineers.
+</p>
+
+<p>
+ Basically, when you configure a Unix system, there are essentially two
+ways to deal with your system clock.
+</p>
+
+<ol>
+ <li> You can set your system clock to TAI-10, which is the "right", but
+uncommon, thing to do:
+  <ul>
+   <li> &uarr; The main advantage of this setup is that it makes your system clock
+<em>linear</em>. In other words,
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/gettimeofday.html">gettimeofday()</a>
+becomes suitable for both timestamping (which needs absolute time) and timeout
+computations (which need reliable interval measurements); if your clock is
+accurate enough, it can function as both a wall clock and a stopwatch.
+This simplifies keeping track of the current time <strong>considerably</strong>,
+and makes event loop handling (with functions such as
+<a href="libstddjb/iopause.html">iopause()</a>) trivial. </li>
+   <li> &uarr; skalibs uses TAI internally; setting your system clock to TAI-10
+saves a lot of conversions and makes time computations with skalibs more
+efficient. </li>
+   <li> &rarr; In order to display GMT or local time properly, you have to
+use the <tt>right/</tt> timezones from Arthur David Olson's timezone
+library. If your libc does not support them, see the
+<a href="#tzisright">next flag</a>. </li>
+   <li> &darr; This setup is arguably not SUSv4 conformant (a strict
+interpretation of Single Unix requires the system clock to be set to UTC). </li>
+   <li> &darr; This setup is <em>not</em> compatible with
+<a href="http://en.wikipedia.org/wiki/Ntpd">ntpd</a>. <tt>ntpd</tt>'s design
+is flawed: it makes the mistake of setting the system clock itself - instead
+of simply making the computed time available to other programs, one of which
+could set the system clock - and it always sets it to UTC. (The
+<a href="http://www.skarnet.org/software/s6-networking/">s6-networking</a>
+package provides alternate ways to synchronize your clock, though.) </li>
+  </ul>
+ </li>
+ <li> You can set your system clock to UTC, which is the common, strictly
+POSIX setup:
+  <ul>
+   <li> &uarr; This is strictly SUSv4-compliant. Most Unix machines all over
+the world are set up like this. </li>
+   <li> &uarr; This is compatible with ntpd. </li>
+   <li> &rarr; You should not use Olson's time library in that case. </li>
+   <li> &darr; skalibs time computations will take a bit more processing power. </li>
+   <li> &darr; Most importantly, you forsake all linearity - and even monotonicity
+- on your system clock, which can now only be used as a wall clock,
+<em>not</em> as a stopwatch. skalibs will try its best to do accurate time
+computations, but there's no way <tt>gettimeofday()</tt> can be relied on
+when a leap second is nearby; you have to use CLOCK_MONOTONIC as a stopwatch
+for accurate interval measurement. </li>
+  </ul>
+ </li>
+</ol>
+
+<p>
+ Set <tt>flag-clockistai</tt> if your system clock is set to TAI-10.
+I generally recommend this setup
+for computers you have full control on, on which you install and tweak
+the software your way, like manually administered servers or embedded
+boxes. If you do not run ntpd and do not mind breaking POSIX, it is the
+sensible choice.
+</p>
+
+<p>
+ Clear <tt>flag-clockistai</tt> if your system clock is set to UTC.
+Use this setting if you're in none of the above cases: you are a
+POSIX freak, or your Unix distribution is running ntpd for you, or
+other software is assuming you're on UTC. This is the default.
+</p>
+
+
+<a name="tzisright"><h3> flag-tzisright </h3>
+
+<p>
+ This flag tells skalibs whether or not you're using Olson's time
+library, i.e. "right/" timezones.
+</p>
+
+<p>
+ Normally, if you set <a href="#clockistai">flag-clockistai</a>, you
+<em>should</em> also set up your timezone to a "right/" one, and
+set <tt>flag-tzisright</tt>. And if you clear
+<a href="#clockistai">flag-clockistai</a>, you should also use a POSIX
+timezone, and clear <tt>flag-tzisright</tt>. <tt>flag-clockistai</tt>
+and <tt>flag-tzisright</tt> should always have the same value.
+</p>
+
+<p>
+ <em>But</em> some C libraries do not support the Olson time library's
+timezone format, and just do not provide the "right/" timezones! For
+instance, the (otherwise excellent) <a href="http://uclibc.org/">uClibc</a>,
+an alternative libc for Linux, only supports POSIX timezones. And you
+might want to use such a libc, and <em>still</em> set up your clock to
+TAI-10, for instance in embedded environments where accurate timekeeping
+is important. In such cases, you'll set up a POSIX timezone, set
+<tt>flag-clockistai</tt>, and clear <tt>flag-tzisright</tt>.
+</p>
+
+<p>
+ Be aware that setting your system clock to TAI-10 without having a
+"right/" timezone will cause non-skalibs-using software to display
+local time incorrectly; in such a setup, only skalibs-using software
+will understand what is going on and do the proper computations to
+display the correct local time. Keep your settings as consistent as
+possible.
+</p>
+
+<p>
+ By default, <tt>flag-tzisright</tt> is clear, as is <tt>flag-clockistai</tt>.
+</p>
+
+<a name="usert"><h3> flag-usert </h3></a>
+
+<p>
+ Single Unix v4 describes <tt>gettimeofday()</tt> as obsolescent,
+and recommends the use of
+<a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/clock_gettime.html">clock_gettime()</a>
+with the CLOCK_REALTIME option instead. However:
+</p>
+
+<ul>
+ <li> <tt>clock_gettime()</tt> is not as portable; for instance, Darwin does not have it. </li>
+ <li> On most systems, using the <tt>clock_</tt> functions requires linking with <tt>librt</tt>,
+which is slightly inconvenient - and silly if all you want is timestamping.
+</ul>
+
+<p>
+ If <tt>flag-usert</tt> is set, the <a href="libstddjb/tai.html">taia_now()
+and taia_setnow()</a> functions for getting and setting time will be based on
+the <tt>clock_gettime()</tt> and <tt>clock_settime()</tt> functions.
+</p>
+
+<p>
+ If <tt>flag-usert</tt> is clear, the old-school <tt>gettimeofday()</tt>
+and <tt>settimeofday()</tt> interfaces will be used. This is the default,
+and it's safe.
+</p>
+
+<a name="usemon"><h3> flag-usemon </h3></a>
+
+<p>
+ Unless you have an accurate hardware system clock <em>and</em> you set it
+on a linear time scale such as TAI-10 instead of UTC (see above), it is
+generally a bad idea to trust the system clock for precise time interval
+measurements. Single Unix recommends the use of <tt>clock_gettime()</tt>
+with the CLOCK_MONOTONIC option to do such measurements: a stopwatch, not
+a wall clock. However:
+</p>
+
+<ul>
+ <li> CLOCK_MONOTONIC is even less portable than CLOCK_REALTIME. </li>
+ <li> It's a bit tricky to emulate absolute time calculations based on
+CLOCK_MONOTONIC. </li>
+</ul>
+
+<p>
+ If <tt>flag-usemon</tt> is set, then the absolute time given by the
+<tt>taia_now()</tt> call will be computed with CLOCK_MONOTONIC. This
+will ensure precise time arithmetic but may drift away from the system
+clock.
+</p>
+
+<p>
+ If <tt>flag-usemon</tt> is clear, <tt>taia_now()</tt> will
+return a time based on the system clock, and not use CLOCK_MONOTONIC.
+This is the default.
+</p>
+
+<a name="noipv6"><h3> flag-noipv6 </h3></a>
+
+<p>
+ If this flag is set, then skalibs will be compiled without IPv6 support,
+even if your target architecture supports it. This can significantly
+reduce the size of your networking applications if they don't need IPv6
+support.
+</p>
+
+<p>
+ If this flag is clear, then skalibs will include IPv6 support in the
+relevant networking functions, if the target architecture supports it.
+The safe option is to let this flag clear.
+</p>
+
+<a name="forcedevr"><h3> flag-forcedevr </h3></a>
+
+<p>
+ If this flag is set, then the automatic sysdep tests will assume the
+target architecture has a working <tt>/dev/random</tt> and will skip
+its autodetection.
+</p>
+
+<p>
+ If this flag is clear, then <tt>/dev/random</tt> will be autodetected
+and tested; if entropy generation is low on the host, the compilation
+process might hang for several minutes. It is safe to let this flag
+clear; it should only be set to speed up the compilation process in a
+known environment and for testing purposes.
+</p>
+
+<p>
+ If skalibs is being cross-compiled, this flag obviously has no effect:
+the presence of a working <tt>/dev/random</tt> is read from the user-provided
+sysdeps.
+</p>
+
+</body>
+</html>

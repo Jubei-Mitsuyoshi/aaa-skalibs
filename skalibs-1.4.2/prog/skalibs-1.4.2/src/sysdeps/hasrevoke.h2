@@ -1,0 +1,2 @@
+#define HASREVOKE
+/* sysdep: +revoke */

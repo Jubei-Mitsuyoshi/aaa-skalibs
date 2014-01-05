@@ -1,0 +1,2 @@
+#undef HASPIPE2
+/* sysdep: -pipe2 */

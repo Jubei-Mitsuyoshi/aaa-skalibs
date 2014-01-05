@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>skalibs: the unixonacid library interface</title
+    <meta name="Description" content="skalibs: the unixonacid library interface" />
+    <meta name="Keywords" content="skalibs library unixonacid libunixonacid unixonacid.h" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://www.skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="../index.html">skalibs</a><br />
+<a href="http://www.skarnet.org/software/">Software</a><br />
+<a href="http://www.skarnet.org/">www.skarnet.org</a>
+</p>
+
+<h1> The <tt>unixonacid</tt> library interface </h1>
+
+<p>
+<tt>libunixonacid</tt> provides higher-level interfaces to Unix
+concepts such as the filesystem - for instance, it provides a way to
+access several files atomically, be it for reading or for writing - or
+interprocess communication.
+</p>
+
+
+<h2> Compiling </h2>
+
+<ul>
+ <li> Add <tt>/package/prog/skalibs/include</tt>, or wherever you installed
+your header files, to your header directory list </li>
+ <li> Use <tt>#include "unixonacid.h"</tt></li>
+</ul>
+
+<h2> Linking </h2>
+
+<ul>
+ <li> For static linking: add <tt>/package/prog/skalibs/library</tt>,
+or wherever you installed your .a files, to your library directory list. </li>
+ <li> For dynamic linking: add <tt>/package/prog/skalibs/library.so</tt>,
+or wherever you installed your .so files, to your library directory list -
+and make sure to properly edit your <tt>ld.so.conf</tt> file and to run
+<tt>ldconfig</tt> if needed. </li>
+ <li> Link with <tt>-lunixonacid.a -lrandom -lstdcrypto -lstddjb
+`cat /package/prog/skalibs/sysdeps/taianow.lib`</tt> (or wherever you
+installed the taianow.lib sysdep file)
+ <li> If you're using EGD, also add
+<tt>`cat /package/prog/skalibs/sysdeps/socket.lib`</tt> (or wherever you
+installed the socket.lib sysdep file) to your
+compiler command line for linking. </li>
+</ul>
+
+<h2> Programming </h2>
+
+<p>
+ The <tt>unixonacid.h</tt> header is actually a concatenation of other
+headers, every one of each declaring related structures, macros and
+functions.
+</p>
+
+<ul>
+ <li> <a href="unix-transactional.html">unix-transactional.h</a>:
+transactional filesystem operations </li>
+ <li> <a href="ancillary.html">ancillary.h</a>: "fd passing" black
+magic via Unix domain sockets </li>
+ <li> <a href="unix-timed.html">unix-timed.h</a>: timed synchronous
+IPC or network operations </li>
+ <li> <a href="skaclient.html">skaclient.h</a>: safe client-server
+connection and communication </li>
+</ul>
+
+</body>
+</html>

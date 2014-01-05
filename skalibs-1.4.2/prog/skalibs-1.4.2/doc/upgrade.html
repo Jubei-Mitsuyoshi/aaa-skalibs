@@ -1,0 +1,503 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>skalibs: how to upgrade</title>
+    <meta name="Description" content="skalibs: How to upgrade" />
+    <meta name="Keywords" content="skalibs installation upgrade" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">skalibs</a><br />
+<a href="http://skarnet.org/software/">Software</a><br />
+<a href="http://skarnet.org/">www.skarnet.org</a>
+</p>
+
+<h1> Upgrade incompatibilities: notes for developers </h1>
+
+<h2> From 1.4.1 to 1.4.2 </h2>
+
+<p>
+ No API incompatibilities.
+</p>
+
+<h2> From 1.4.0 to 1.4.1 </h2>
+
+<p>
+ Bugfix release. No API changes.
+</p>
+
+<h2> From 1.3.0 to 1.4.0 </h2>
+
+<p>
+ The internals of genset(dyn) have changed. Instead of using a bitarray
+to find empty cells, they now use a stack of free cell numbers. This
+takes more storage space, but finds a new free cell in O(1) instead of
+O(n).
+</p>
+
+<p>
+ <tt>ip4_scanlist() has changed again. The old function is available
+as <tt>ip4_scanlist_u32()</tt>.
+</p>
+
+<p>
+ IPv6 support has been fleshed out. socket_tcp() and socket_udp()
+are now called socket_tcp4() and socket_udp4(); there are macros for
+compatibility.
+</p>
+
+<p>
+ Old functions and macros marked deprecated for a long time
+have been removed.
+</p>
+
+<p>
+ fmtscan.h has been reorganized. There are now ushort.h, uint.h and
+ulong.h headers for basic integer type management. struct taia's
+prototype has been changed to use uint32s.
+</p>
+
+<p>
+socket_ipoptionskill() has been removed, because there's no way to
+implement it even in a semi-portable way.
+</p>
+
+<p>
+ Some portability quirks have been moved to the new nonposix.h header.
+</p>
+
+<h2> from 1.2.8 to 1.3.0 </h2>
+
+<p>
+ The PROG global variable is now declared in libstddjb. Programs that
+use <tt>strerr2.h</tt> do not need to define PROG anymore. However, they
+should assign it a proper value when the executable starts.
+</p>
+
+<p>
+ The <tt>ip4_scanlist()</tt> function API has changed, to become compatible
+with the other scanning functions.
+</p>
+
+<p>
+ Tha libancillary API has been simplified: buffers are now auto-allocated
+on the stack.
+</p>
+
+<p>
+ New APIs have been added : _g versions of timed functions to use a global
+stamp variable, ip46.h for unified IPv4 and IPv6 network functions.
+</p>
+
+<p>
+ Most of the biguint API has changed. Now there is no arbitrary limit to
+integer length - except stack space.
+</p>
+
+<p>
+ <tt>sysdeps.h</tt> has been moved to the <tt>include/</tt> subdirectory.
+</p>
+
+<p>
+ FHS support has been added. See the end of
+<a href="slashpackage.html">this page</a> for the rationale, and the
+<a href="http://www.skarnet.org/software/conf-compile.html">general skarnet.org
+configuration page</a> for how to proceed.
+</p>
+
+<h2> from 1.2.7 to 1.2.8 </h2>
+
+<p>
+ No API incompatibilities.
+</p>
+
+<h2> from 1.2.6 to 1.2.7 </h2>
+
+<p>
+ No API incompatibilities.
+</p>
+
+<h2> from 1.2.5 to 1.2.6 </h2>
+
+<p>
+ No API incompatibilities; <tt>envdir()</tt> is now a macro, the underlying
+function is <tt>envdir_internal()</tt>.
+</p>
+
+<h2> from 1.2.4 to 1.2.5 </h2>
+
+<p>
+ No API incompatibilities, unless you're using non-documented functions, but the
+changes should be transparent anyway.
+</p>
+
+<h2> from 1.2.3 to 1.2.4 </h2>
+
+<p>
+ No API incompatibilities.
+</p>
+
+<h2> from 1.2.2 to 1.2.3 </h2>
+
+<p>
+ Some functions have been redefined as macros.
+</p>
+
+<h2> from 1.2.1 to 1.2.2 </h2>
+
+<p>
+ <tt>buffer_0</tt> is now an alias to <tt>&amp;buffer_0_</tt> instead of an object.
+Same thing with other predefined buffers.
+</p>
+
+<p>
+ <tt>localtm_from_ltm64()</tt> now returns 0 EOVERFLOW (instead of 0 EINVAL) when
+attempting to convert a date that does not fit in a <tt>time_t</tt> (for instance
+a date posterior to 2038).
+</p>
+
+<p>
+ The genwrite.h functions have been added.
+</p>
+
+<h2> from 1.2.0 to 1.2.1 </h2>
+
+<p>
+ The lolstdio.h functions have been added.
+</p>
+
+<h2> from 1.1.1 to 1.2.0 </h2>
+
+<p>
+ Some of the avlnode, avltree and avltreen functions have a slightly
+different, better API.
+</p>
+
+<h2> from 1.1.0 to 1.1.1 </h2>
+
+<p>
+  No API incompatibilities.
+</p>
+
+<h2> to 1.1.0 </h2>
+
+<p>
+ The <tt>short_scan()</tt>, <tt>int_scan()</tt> and <tt>long_scan()</tt>
+functions now stop scanning when they detect an overflow, instead of
+silently scanning on and parsing the wrong value.
+</p>
+
+<h2> to 1.0.4 </h2>
+
+<p>
+  No API incompatibilities.
+</p>
+
+<h2> to 1.0.3 </h2>
+
+<p>
+ The <tt>sig_catcha()</tt> function does not save the old signal handler
+anymore; now it's a macro. The <tt>sig_restore()</tt> function has also
+become a macro, and it amounts to resetting the signal to the default
+action. If you want to save old signal handlers, use the <tt>sig_push()</tt>
+and <tt>sig_pop()</tt> functions.
+</p>
+
+
+<h2> from 1.0.0 to 1.0.1 or 1.0.2 </h2>
+
+<p>
+ No API incompatibilities.
+</p>
+
+
+<h2> from 0.47 to 1.0.0 </h2>
+
+<p>
+ The build system has changed.
+</p>
+
+<p>
+  <em>A lot</em> of APIs have changed.
+</p>
+
+<p>
+ Some functions have been moved between libraries. Some libraries have
+disappeared. Compatibility with previous releases of skalibs is
+<strong>not</strong> ensured.
+</p>
+
+<p>
+ A little documentation has appeared. The functions that are documented
+are now forming a stable API, which should not change anymore. Functions
+that are declared in the include files but that remain undocumented are
+not part of the stable API yet. More documentation will be provided in
+future releases, extending the stable API.
+</p>
+
+<p>
+ <tt>libdns</tt> has disappeared for good. A replacement will be provided
+in the <a href="http://www.skarnet.org/software/s6-dns/">s6-dns</a> package.
+</p>
+
+<p>
+ A lot of new functionalities are available.
+</p>
+
+<p>
+ Several small bugs (and a big one) have been fixed.
+</p>
+
+<p>
+ More small bugs have probably been added, but not that much.
+</p>
+
+<p>
+ iopause() doesn't use floating-point operations anymore. Also, the new
+recommended interface is <tt>iopause_stamp()</tt>.
+</p>
+
+<p>
+ Memory management, and general efficiency, have been greatly enhanced.
+</p>
+
+
+<h2> from 0.46 to 0.47 </h2>
+
+<p>
+  No API incompatibilities.
+</p>
+
+<p>
+ The installer has changed (links in <tt>/usr/local</tt> aren't
+performed automatically anymore) but it shouldn't impact this
+package: there are no <tt>/usr/local</tt> links for skalibs anyway.
+</p>
+
+
+<h2> from 0.45 to 0.46 </h2>
+
+<ul>
+ <li> The low-level entry points <tt>cdb_make_addbegin()</tt> and
+<tt>cdb_make_addend()</tt> have been removed. Please use
+<tt>cdb_make_add()</tt> instead and do not mess around with hash values.
+<tt>:-)</tt> </li>
+ <li> The <tt>alloc_re()</tt> and <tt>alloc_realloc()</tt> prototypes
+have changed: now they use <tt>void&nbsp;**</tt> instead of
+<tt>char&nbsp;**</tt>. This shouldn't break anything. </li>
+</ul>
+
+
+<h2> from 0.44 to 0.45 </h2>
+
+<p>
+  No API incompatibilities.
+</p>
+
+
+<h2> from 0.43 to 0.44 </h2>
+
+<ul>
+ <li> IOPAUSE_READ has been changed to POLLIN | POLLHUP on systems with
+<tt>poll()</tt>. If something breaks, please report it. </li>
+</ul>
+
+
+<h2> from 0.42 to 0.43 </h2>
+
+<ul>
+ <li> Internal librandom structures have been completely rewritten. </li>
+ <li> Applications linked against <tt>librandom.a</tt> and using the
+standard <tt>goodrandom</tt>/<tt>badrandom</tt> interface must also be
+linked against <tt>libstdcrypto.a</tt>. There is no need to use
+<tt>goodrandom_init()</tt> or <tt>badrandom_init()</tt> anymore. </li>
+</ul>
+
+
+<h2> from 0.41 to 0.42 </h2>
+
+<ul>
+ <li> The <tt>dns_resolve_r()</tt> interface has been removed. Internal
+libdns structures have been heavily modified. </li>
+</ul>
+
+
+<h2> from 0.40 to 0.41 </h2>
+
+<ul>
+ <li> The <tt>readclose()</tt> interface has been removed. </li>
+</ul>
+
+
+<h2> from 0.39 to 0.40 </h2>
+
+<p>
+ The <tt>allreadwrite</tt> interface has been changed: <tt>allread</tt>,
+<tt>allwrite</tt> and other looping functions now return an unsigned int,
+which is the number of processed bytes. If this number is lesser than
+the number requested, <tt>errno</tt> will describe what happened.
+<tt>EPIPE</tt> on a reading operation means EOF. </tt>
+</p>
+
+<p>
+ The default signal mask when entering a signal handler has been
+changed from empty to full, but this is saner. If you were relying on
+the old behaviour, your code was buggy.
+</p>
+
+
+<h2> from 0.38 to 0.39 </h2>
+
+<p>
+ No API incompatibilities.
+</p>
+
+
+<h2> from 0.37 to 0.38 </h2>
+
+<p>
+  Less functions and more macros in <tt>fmtscan.h</tt>.
+</p>
+
+
+<h2> from 0.36 to 0.37 </h2>
+
+<p>
+ All the *_fmt functions have been replaced by macros. Programs using
+<tt>&amp;uint_fmt</tt>, for instance, will not work anymore; the only
+remaining unsigned format function is <tt>uint64_fmt</tt> -
+and its octal and hexadecimal counterparts. Please do not assume that
+a function defined in <tt>fmtscan.h</tt> will remain a function; more
+functions are likely to be replaced by macros in future versions of
+skalibs.
+</p>
+
+
+<h2> from 0.35 to 0.36 </h2>
+
+<p>
+ No API incompatibilities.
+</p>
+
+
+<h2> from 0.34 to 0.35 </h2>
+
+<ul>
+ <li> The <tt>dirname()</tt> prototype has been changed, to be
+SUSv3-compliant. A new function, <tt>sadirname()</tt>, has been
+added; you should rewrite your programs using the old <tt>dirname()</tt>
+so that they use <tt>sadirname()</tt> instead. </li>
+ <li> The libdatastruct has been rewritten. <tt>gen_list1</tt> and
+<tt>gen_avltree</tt> do not exist anymore. You should rewrite your
+programs so that they use the new <tt>list1</tt> and <tt>avltree</tt>
+APIs instead. To do this, store your objects into a <tt>gen_bunch</tt>
+and store only the (unsigned int) indices into the data structure. </li>
+</ul>
+
+
+<h2> from 0.33 to 0.34 </h2>
+
+<p>
+ No API incompatibilities.
+</p>
+
+
+<h2> from 0.32 to 0.33 </h2>
+
+<p>
+ No API incompatibilities.
+</p>
+
+
+<h2> from 0.31 to 0.32 </h2>
+
+<p>
+ No API incompatibilities.
+</p>
+
+
+<h2> from 0.30 to 0.31 </h2>
+
+<p>
+ No API incompatibilities. The available namespace has been reduced
+because of name changes in the <tt>fmtscan</tt> functions; but the
+"old" names are still working.
+</p>
+
+
+<h2> from 0.29 to 0.30 </h2>
+
+<p>
+ No API incompatibilities.
+</p>
+
+
+<h2> from 0.28 to 0.29 </h2>
+
+<p>
+ No API incompatibilities.
+</p>
+
+
+<h2> from 0.27 to 0.28 </h2>
+
+<p>
+ No API incompatibilities.
+</p>
+
+
+<h2> from 0.26 to 0.27 </h2>
+
+<p>
+ No API incompatibilities. Only the packaging has changed.
+</p>
+
+
+<h2> from 0.25 to 0.26 </h2>
+
+<p>
+ No API incompatibilities. The internal build order has changed,
+but you shouldn't be relying on it anyway.
+</p>
+
+<h2> from 0.24 to 0.25 </h2>
+
+<ul>
+ <li> The <tt>*.h</tt> sysdeps have been renamed with the dot
+removed, for consistency. </li>
+ <li> On some BSD and Solaris systems, sysdeps may have changed.
+This is a good thing: your system's capabilities should be guessed
+more accurately now. </li>
+ <li> The <tt>drop_uidgid</tt> and <tt>drop_root</tt> functions
+have been removed. The <tt>strerr2.h</tt> macros make direct
+<tt>chroot</tt> and <tt>prot_[ug]id</tt> calls easier. </li>
+</ul>
+
+<h2> from 0.23 to 0.24 </h2>
+
+<ul>
+ <li> A <tt>conf-compile</tt> directory has been created, and
+administrators are invited to modify only the files contained
+in that directory (which are symlinks). The preconfiguration
+interface is subject to <em>heavy</em> change. </li>
+</ul>
+
+<h2> from 0.22 to 0.23 </h2>
+
+<ul>
+ <li> The preferred gccattributes interface has been changed. See
+<tt>src/headers/gccattributes.h</tt>. </li>
+</ul>
+
+<h2> from pre-0.22 to 0.22 </h2>
+
+<ul>
+ <li> The GEN_ALLOC interface has been changed. See
+<tt>src/libstddjb/gen_alloc.h</tt>. </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,2 @@
+#define HASWAITPID
+/* sysdep: +waitpid */

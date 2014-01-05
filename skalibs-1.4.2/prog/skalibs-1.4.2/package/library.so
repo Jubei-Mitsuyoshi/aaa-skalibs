@@ -1,0 +1,6 @@
+libstddjb.so
+libstdcrypto.so
+librandom.so
+libunixonacid.so
+libbiguint.so
+libdatastruct.so

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>skalibs: why use slashpackage</title>
+    <meta name="Description" content="skalibs: why use slashpackage" />
+    <meta name="Keywords" content="skalibs djb slashpackage package command library" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://www.skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">skalibs</a><br />
+<a href="../index.html">Software</a><br />
+<a href="../../index.html">www.skarnet.org</a>
+</p>
+
+<h1> What is that slashpackage convention and why are you recommending it&nbsp;? </h1>
+
+<p>
+<a href="http://cr.yp.to/slashpackage.html">slashpackage</a> is a convention
+proposed by <a href="djblegacy.html">DJB</a> to have a reliable,
+cross-platform way of accessing files.
+</p>
+
+<p>
+(<a href="http://dogmap.org/">Paul Jarc</a> has a
+<a href="http://code.dogmap.org/slashpackage/">presentation of
+slashpackage</a> that you may want to view.)
+</p>
+
+<p>
+ For instance, the
+<a href="http://www.skarnet.org/software/execline/">execline</a> package
+follows the slashpackage convention by default: this means that, among others, the
+<a href="http://www.skarnet.org/software/execline/execlineb.html">execlineb</a>
+binary can be found at <tt>/package/admin/execline/command/execlineb</tt>
+<em>no matter the underlying installation, no matter the platform, no
+matter the OS</em> - as long as the convention is followed.
+</p>
+
+<p>
+ This is a key point for system reliability. It is especially important
+for a script interpreter such as <tt>execlineb</tt>: people might
+distribute scripts, starting with a #! line, and if the shebang path
+is wrong on some machine, the script will break on that machine. Long
+story short: <strong>packages should be able to hardcode paths to other
+packages' components.</strong>
+<a href="http://cr.yp.to/slashpackage/studies.html">The FHS alone does
+not guarantee this.</a>
+</p>
+
+<h2> But the FHS is a widely adopted <em>standard</em>&nbsp;!
+You cannot go against it&nbsp;! </h2>
+
+<p>
+ This is irrelevant for two reasons:
+</p>
+
+<ol>
+ <li> Standards are not sacred <em>per se</em>. Standards are nothing
+more than <em>conventions</em>. In the Unix world, there are two ways
+for something to become a standard:
+ <ul>
+  <li> Be incredibly good, so good that everyone adopts it at once and
+it booms, to everyone's benefit. Example:
+<a href="http://www.rfc-editor.org/rfc/rfc791.txt">IPv4</a>. Even
+<a href="http://www.microsoft.com/">Microsoft</a> could not compete
+with it, and had to abandon their Microsoft Network and hop on the
+Internet bandwagon. </li>
+  <li> Have been there historically for ages, so everyone does the
+same by inertia, and eventually become a de facto standard, technical
+quality notwithstanding. Example:
+<a href="http://www.opengroup.org/onlinepubs/9699919799/functions/gets.html">gets()</a>. </li>
+ </ul>
+ Guess what category the FHS belongs to. If you said the second one,
+you're right: the FHS is only a standard because people simply never
+bothered to question it and design anything better. </li>
+ <li> Slashpackage <em>does not conflict</em> with the FHS, at all.
+You can have your clean FHS hierarchy, with the <tt>execlineb</tt>
+binary stored under <tt>/usr/bin</tt> or <tt>/usr/local/bin</tt>,
+<em>and</em> have it accessible as
+<tt>/package/admin/execline/command/execlineb</tt>, thanks to this
+wonderful Unix thing called a symbolic link. Slashpackage does not
+care where files are <em>stored</em>; it only requires them to be
+<em>accessible</em> via the <tt>/package</tt> hierarchy. So, why
+not have the best of both worlds, and respect the FHS <em>and</em>
+slashpackage&nbsp;? </li>
+</ol>
+
+<h2> I disagree with your first point: the FHS is a good standard. </h2>
+
+<p>
+ This is off-topic, but I'll address it here to be done with it.
+</p>
+
+<p>
+ Yes, of course there are good points in the FHS. The people who designed
+it in the first place were not idiots. However, this was a <em>long time</em>
+ago, and the problems that had to be solved then are mostly irrelevant now.
+</p>
+
+<p>
+ For instance, <tt>/usr</tt> was created so you could have a minimal
+system on a local disk, then mount <tt>/usr</tt> via NFS. Mass storage
+was a problem at the time, so it was easier and cheaper to only have
+one copy of <tt>/usr</tt> on an NFS server. Today, we have lots of
+cheap mass storage, and bootable CDs; the distinction between <tt>/bin</tt>
+and <tt>/usr/bin</tt> is largely irrelevant.
+</p>
+
+<p>
+ Same thing with <tt>/bin</tt> and <tt>/sbin</tt>. Why are some binaries
+stored under <tt>/sbin</tt>&nbsp;? It's not to prevent the user from
+accessing them: <tt>/sbin</tt> is world-readable on practically every
+system. What is the benefit of having a separate <tt>/sbin</tt> for
+administrator programs, over just putting those in <tt>/bin</tt>,
+with a 0700 mode if one is paranoid&nbsp;? This one is left as an
+exercise for the reader; but in any case, it does not make sense
+today.
+</p>
+
+<p>
+ The only filesystem hierarchy a modern system needs is the
+following:
+</p>
+
+<ul>
+ <li> Have a place that can be mounted read-only, where system
+binaries and data reside. (Currently, this is <tt>/usr</tt>;
+this really should be the root filesystem.) </li>
+ <li> Have a place that must be mounted read-write, for the
+system to store variable data. (This is <tt>/var</tt>, and it
+is a good thing.) </li>
+ <li> Have a place that must be mounted read-write and that can
+be mounted synchronously, to avoid losing important data such
+as mail queues and logs. (<tt>/var/log</tt> can be used for
+this; but the FHS says nothing about mail queues.) </li>
+ <li> Have a place that can be mounted as a RAM filesystem.
+(<tt>/tmp</tt> was not designed with this in mind, but it
+fits the constraint perfectly.) </li>
+ <li> Have a place for the users to do whatever they want.
+(This is <tt>/home</tt>, and it is a good thing.) </li>
+</ul>
+
+<p>
+ The FHS addresses this constraints well enough, but due to
+historical legacy cruft, it does <em>way more</em> than is
+necessary, and it adds complexity.
+</p>
+
+<p>
+ The important point, though, is that there is ONE vital
+thing that the FHS does not do: ensure cross-platform
+accessibility of packages. I am not blaming the FHS: it was
+not designed to do that. But the need is there, and denying
+it only postpones the problems and makes life hard for users.
+Since the FHS cannot address the need, we need <em>an
+additional</em> convention. And slashpackage does the job.
+</p>
+
+<h2> We are a Unix distribution; our policy does not allow software
+to install anything outside of the FHS-defined directories. If it
+did, there would be chaos; we could not unify the software and
+make a polished distribution for the users. </h2>
+
+<p>
+ I understand your point of view, but disagree with it.
+Please read <a href="http://cr.yp.to/compatibility.html">this
+page</a> about cross-platform compatibility.
+</p>
+
+<p>
+ In my opinion, the right way for a Unix distribution to package
+software is <strong>not</strong> to "unify" it and make a
+"polished" distribution. It's to <strong>friggin' package
+the software</strong>, i.e. provide a tarball and automatic
+installation, configuration and removal scripts.
+</p>
+
+<p>
+ By doing more than this, and especially by bypassing primary
+authors' decisions about how files should be accessed, Unix
+distributions are creating more work. More work for themselves,
+because they have to maintain subtly different versions of
+software than what the primary author provides; and more work
+for the users, because instead of learning "execline", a user
+now has to learn "Ubuntu execline", "Fedora execline", "OpenBSD
+execline".
+</p>
+
+<p>
+ Anyway, I have no objection to following the FHS. None at all. If you're
+going to package my software, you're free to put the files wherever you
+want. All I ask is that you <em>do</em> add symbolic links so files can
+be accessed via <tt>/package</tt>, and via <tt>/command</tt> too for
+executables.
+If your policy does not allow it, then I ask that you:
+</p>
+
+<ul>
+ <li> think about it and <strong>question that policy, and the people
+who decided on it</strong>. Is it really necessary
+to be such a nazi for <em>two subdirectories of <tt>/</tt></em>, that
+can even be symbolic links to <tt>/opt/package</tt> and <tt>/opt/command</tt>
+or whatever can make your life easier&nbsp;? What is more important,
+having a "clean" <tt>/</tt> directory (and this is laughable when you
+look at <tt>/media</tt> or <tt>/srv</tt>), or having reliable
+hardcoded paths and happy users&nbsp;? </li>
+ <li> if you can, <em>at least</em> have a slashpackage-style forest of
+symlinks in a subdirectory of your choice - <tt>/usr/lib/slashpackage</tt>,
+or <tt>/var/lib/slashpackage</tt>, or <tt>/opt/package</tt>, or whatever
+you want. This way, users can still access files via their
+slashpackage name; they just need to know the prefix. All of the
+skarnet.org programs, all of the dogmap.org programs, and many more
+slashpackage-aware pieces of software, natively support prefixed
+slashpackage installations. </li>
+</ul>
+
+<h2> Be real. You're one of the two or three crackpots in the world who
+follow that convention. All you're going to achieve is deter people
+from using your software. </h2>
+
+<p>
+ Well, I used to not care at all, because I mainly write software for
+myself, and quality - which includes reliability - is more important to me
+than widespread use. (Seriously, if widespread use was a good metric for
+quality, I'd be applying for a job at Microsoft.) After all, I'm rewriting
+the world, so let me do it my way, right&nbsp;?
+</p>
+
+<p>
+ However, I have come to realize that unlike actual software, a
+<em>convention</em> is only good if it is <em>followed</em> by a
+non-negligible amount of people. The Unix world is certainly ready for
+better software, but it is apparently not ready for better filesystem
+organization.
+</p>
+
+<p>
+ So, starting in 2013, all skarnet.org releases now feature a way to
+build and install software on a non-slashpackage installation. I hope
+this will encourage more people to use it.
+</p>
+
+<p>
+ This means some responsibility has been transferred from the author to
+the packagers and the system administrators. If you are forfeiting the
+slashpackage guarantees, then it is up to you to make sure things work.
+In particular, you should pay attention to the following points:
+</p>
+
+<ul>
+ <li> Non-atomic package upgrade. (With slashpackage, upgrading software
+from a release to another is atomic.) </li>
+ <li> More generally, more painful package management. Hopefully, your
+distribution does that for you. Hopefully, they don't screw things up
+too badly. </li>
+ <li> No guaranteed absolute paths. Executables have to rely on the PATH
+environment variables to find other executables - even executables belonging
+to the same package. This can be problematic if there is a name conflict. </li>
+ <li> Script shebangs. If you can't portably write <tt>#!/command/execlineb</tt>,
+then you have to edit your execline scripts to match your system. Is that
+<tt>#!/bin/execlineb</tt>&nbsp;? <tt>#!/usr/bin/execlineb</tt>&nbsp;? Oh, I know the
+solution&nbsp;! It's <tt>#!/usr/bin/env execlineb</tt>&nbsp;! But wait, is that
+<tt>/usr/bin/env</tt> or <tt>/bin/env</tt>&nbsp;? Or <tt>/usr/local/bin/env</tt>
+maybe&nbsp;? Damn. </li>
+</ul>
+
+<p>
+ But it's your dime.
+</p>
+
+</body>
+</html>

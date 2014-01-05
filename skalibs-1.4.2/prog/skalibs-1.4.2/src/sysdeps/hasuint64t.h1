@@ -1,0 +1,2 @@
+#undef HASUINT64T
+/* sysdep: -uint64t */

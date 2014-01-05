@@ -1,0 +1,13 @@
+#include "tai.h"
+
+typedef struct iopause_fd iopause_fd, *iopause_fd_ref ;
+struct iopause_fd
+{
+  int fd ;
+  unsigned short events ;
+  unsigned short revents ;
+} ;
+
+#define IOPAUSE_READ 0x0011
+#define IOPAUSE_WRITE 0x0004
+#define IOPAUSE_EXCEPT 0x0038

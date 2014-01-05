@@ -1,0 +1,2 @@
+#undef HASDEVTCP
+/* sysdep: -devtcp */

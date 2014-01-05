@@ -1,0 +1,2 @@
+#define HASMALLOC0
+/* sysdep: +malloc0 */

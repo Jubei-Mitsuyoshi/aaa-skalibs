@@ -1,0 +1,2 @@
+#define HASGETTIMEOFDAY
+/* sysdep: +gettimeofday */

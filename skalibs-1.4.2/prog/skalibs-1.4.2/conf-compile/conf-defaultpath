@@ -1,0 +1,7 @@
+/command:/usr/bin:/bin
+
+This will be the default executable search path used by pathexec_run()
+when no PATH environment variable is defined. The value should not
+really matter since PATH should always be defined. If you are not
+following the slashcommand convention, though, you might want to
+set it to /usr/bin:/bin.

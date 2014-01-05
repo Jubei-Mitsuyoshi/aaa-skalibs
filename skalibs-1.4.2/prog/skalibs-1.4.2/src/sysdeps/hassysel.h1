@@ -1,0 +1,2 @@
+#undef HASSYSSELECT
+/* sysdep: -sysselect */

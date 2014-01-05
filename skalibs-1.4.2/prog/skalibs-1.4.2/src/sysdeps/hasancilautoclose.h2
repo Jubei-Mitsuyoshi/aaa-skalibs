@@ -1,0 +1,2 @@
+#define HASANCILAUTOCLOSE
+/* sysdep: +ancilautoclose */

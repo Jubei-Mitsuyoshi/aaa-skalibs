@@ -1,0 +1,13 @@
+/* ISC license. */
+
+#ifndef SHGLOB_H
+#define SHGLOB_H
+
+#include <glob.h>
+
+#define GLOB_NOMATCH (-3)
+#define GLOB_NOESCAPE GLOB_QUOTE
+
+#define shglob(pattern, flags, errfunc, pglob) glob((pattern), (int)(((flags) & GLOB_QUOTE) ? (flags) & ~GLOB_QUOTE : (flags) | GLOB_QUOTE), (errfunc), (pglob))
+
+#endif

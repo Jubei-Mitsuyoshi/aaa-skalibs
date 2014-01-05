@@ -1,0 +1,2 @@
+#define HASSPLICE
+/* sysdep: +splice */

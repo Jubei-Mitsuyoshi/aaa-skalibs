@@ -1,0 +1,2 @@
+#undef HASTIOCREMOTE
+/* sysdep: -tiocremote */

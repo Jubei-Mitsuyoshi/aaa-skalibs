@@ -1,0 +1,2 @@
+#undef HASLITTLE_ENDIAN
+/* sysdep: -little_endian */

@@ -1,0 +1,2 @@
+#undef HASSO_PEERCRED
+/* sysdep: -SO_PEERCRED */

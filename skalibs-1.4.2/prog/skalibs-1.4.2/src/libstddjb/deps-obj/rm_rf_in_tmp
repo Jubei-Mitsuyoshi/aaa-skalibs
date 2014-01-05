@@ -1,0 +1,4 @@
+bytestr.h
+stralloc.h
+direntry.h
+djbunix.h

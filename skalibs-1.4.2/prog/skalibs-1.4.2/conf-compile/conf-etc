@@ -1,0 +1,4 @@
+/etc
+
+ This is where global configuration files such as leapsecs.dat
+will be copied at installation time.

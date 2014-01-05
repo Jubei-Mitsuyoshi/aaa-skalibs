@@ -1,0 +1,2 @@
+#define HASUNIXH
+/* sysdep: +unixh */

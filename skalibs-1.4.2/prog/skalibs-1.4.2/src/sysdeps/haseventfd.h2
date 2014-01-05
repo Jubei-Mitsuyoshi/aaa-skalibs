@@ -1,0 +1,2 @@
+#define HASEVENTFD
+/* sysdep: +eventfd */

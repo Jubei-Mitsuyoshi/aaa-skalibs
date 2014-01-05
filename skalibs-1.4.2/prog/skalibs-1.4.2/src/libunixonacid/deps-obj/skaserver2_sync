@@ -1,0 +1,6 @@
+env.h
+fmtscan.h
+bufalloc.h
+tai.h
+djbunix.h
+skaclient.h

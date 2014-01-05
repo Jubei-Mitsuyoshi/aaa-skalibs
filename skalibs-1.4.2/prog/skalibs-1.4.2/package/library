@@ -1,0 +1,6 @@
+libstddjb.a
+libstdcrypto.a
+librandom.a
+libunixonacid.a
+libbiguint.a
+libdatastruct.a

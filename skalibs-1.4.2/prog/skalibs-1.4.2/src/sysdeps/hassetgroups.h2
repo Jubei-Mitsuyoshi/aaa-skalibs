@@ -1,0 +1,2 @@
+#define HASSETGROUPS
+/* sysdep: +setgroups */

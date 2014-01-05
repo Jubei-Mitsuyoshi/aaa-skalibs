@@ -1,0 +1,2 @@
+#undef HAS_GETPTY
+/* sysdep: -_getpty */

@@ -1,0 +1,2 @@
+#define HASIPV6
+/* sysdep: +ipv6 */

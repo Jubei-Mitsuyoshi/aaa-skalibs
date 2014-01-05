@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>How to cross-compile skalibs</title>
+    <meta name="Description" content="How to cross-compile skalibs" />
+    <meta name="Keywords" content="skalibs build cross-compilation" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://www.skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="index.html">skalibs</a><br />
+<a href="../index.html">Software</a><br />
+<a href="../../index.html">www.skarnet.org</a>
+</p>
+
+<h1> How to cross-compile skalibs </h1>
+
+<p>
+ There are three issues in the world of cross-compilation:
+</p>
+
+<ul>
+ <li> support for parallel builds: the source directory must be read-only
+and each build process must have its own build tree. </li>
+ <li> support for compiler options: to specify the target architecture,
+the header and library files that should be used, etc.
+ <li> build-time tests performed on the build architecture are invalid
+if the target architecture is different. </li>
+</ul>
+
+<p>
+ Starting with release 0.26, skalibs tries to address those issues.
+</p>
+
+<h2> Support for parallel builds </h2>
+
+<p>
+ Let's assume that:
+</p>
+
+ <ul>
+  <li> You untarred the <tt>skalibs-$VERSION.tar.gz</tt> archive into <tt>$BUILDROOT</tt>. </li>
+  <li> You made a symlink <tt>$BUILDROOT/prog/skalibs -> skalibs-$VERSION</tt>.
+(This is not really necessary, but it allows you to access the skalibs source
+tree as <tt>$BUILDROOT/prog/skalibs</tt> no matter the version number.) </li>
+</ul>
+You now have a few subdirectories in the <tt>$BUILDROOT/prog/skalibs</tt> directory:
+<ul>
+ <li> <tt>conf-compile</tt>. This is where you will write compilation options. </li>
+ <li> <tt>doc</tt>. The skalibs documentation you are currently reading. Not used
+in the build process. </li>
+ <li> <tt>package</tt>. Build system scripts and general package information.
+You should <em>not</em> modify anything there unless you know exactly
+what you are doing. </li>
+ <li> <tt>src</tt>. The source tree. </li>
+</ul>
+
+<p>
+ <em>None</em> of those directories are written into by the skalibs build
+system. Instead, the build scripts create the following directories:
+</p>
+
+<ul>
+ <li> <tt>compile</tt>. This is where all the compilation takes place.
+Every source file will be symlinked there, and object files will be
+created there. </li>
+ <li> <tt>include</tt>. This is where the target header files will
+reside after the compilation. </li>
+ <li> <tt>library</tt>. This is where the target static library files will
+reside after the compilation. </li>
+ <li> <tt>library.so</tt>. This is where the target shared library files,
+if any, will reside after the compilation.
+ <li> <tt>sysdeps</tt>. This is where the target system-specific
+information will reside after build-time autodetection or manual
+importing. More on that below. </li>
+</ul>
+
+<p>
+ To prepare for a build in a separate place - say, in
+<tt>$ARCHROOT/skalibs</tt> - that will not modify the directory
+where the sources have been unpacked, so that parallel builds can
+occur, you should then take the following steps:
+</p>
+
+<ul>
+ <li> mkdir <tt>$ARCHROOT/skalibs</tt> </li>
+ <li> symlink the <tt>$BUILDROOT/prog/skalibs/package</tt> and
+<tt>$BUILDROOT/prog/skalibs/src</tt> directory into
+<tt>$ARCHROOT/skalibs</tt> </li>
+ <li> mkdir <tt>$ARCHROOT/skalibs/conf-compile</tt> </li>
+</ul>
+
+<p>
+ You now have your own arch-specific <tt>$ARCHROOT/skalibs</tt>
+tree; it's time to fill it with arch-specific options.
+</p>
+
+<h2> Support for build-time options </h2>
+
+<p>
+ The first line of <tt>conf-compile/conf-cc</tt> must be
+the command line used to compile a .c file into a .o file:
+for instance, <tt>gcc&nbsp;-c</tt>. <br />
+If you're using a "GNU&nbsp;configure"-type system with
+<tt>$CC</tt> and <tt>$CFLAGS</tt>, the following line should be enough:
+</p>
+
+<pre>
+  echo ${CC} ${CFLAGS} > conf-compile/conf-cc
+</pre>
+
+<p>
+ Similarly, the first line of <tt>conf-compile/conf-ld</tt> must be
+the command line used to link .o and .a files into an executable:
+for instance, <tt>gcc&nbsp;-s</tt>. <br />
+With a "GNU&nbsp;configure"-type system, the following line should do
+the trick:
+</p>
+
+<pre>
+  echo ${CC} ${LDFLAGS} > conf-compile/conf-ld
+</pre>
+
+<p>
+  Now, there is another file: <tt>conf-compile/conf-egd</tt>.
+If you're going to perform build-time autodetection, you need to 
+provide it now:
+</p>
+
+<pre>
+  echo path-to-the-target-EGD-socket > conf-compile/conf-egd
+</pre>
+
+<p>
+ or, if you won't be using EGD, just
+</p>
+
+<pre>
+  echo > conf-compile/conf-egd
+</pre>
+
+<p>
+But you probably do not need to do that, because you will be providing
+your own sysdeps.
+</p>
+
+<p>
+ Starting with 0.27: there are two other files,
+ <tt>conf-stripbins</tt> and <tt>conf-striplibs</tt>.
+Since skalibs does not provide any executables, and since you are
+cross-compiling, avoid trouble and do not strip anything:
+</p>
+
+<pre>
+  echo > conf-compile/conf-stripbins
+  echo > conf-compile/conf-striplibs
+</pre>
+
+<p>
+ Starting with 1.0.0: you can also set flags by touching files
+in <tt>conf-compile/</tt>. <a href="flags.html">This page</a>
+explains how flags work.
+</p>
+
+<h2> Bypassing the build-time tests </h2>
+
+<p>
+ The "normal" skalibs build procedure, <tt>package/compile</tt>, performs
+the following steps:
+</p>
+
+<ol>
+ <li> finding the target's (i.e. here the build arch's) <em>systype</em> </li>
+ <li> building correct compilation scripts from the <em>systype</em> and the
+information you gave in <tt>conf-compile</tt> </li>
+ <li> making some build-time tests to gather <em>sysdeps</em>, i.e.
+arch-specific information, used in the sources to work around possible
+portability problems </li>
+ <li> compiling the portable sources. </li>
+</ol>
+
+<p>
+ In a cross-compilation environment, the steps 1 and 3 are clearly invalid:
+the autodetected <em>systype</em> and <em>sysdeps</em> will be the build
+architecture's, not the target architecture's. There is only one way to
+cross-compile portable code without resorting to build-time autodetection:
+<strong>you must provide by hand the sysdeps for your target
+architecture</strong>.
+</p>
+
+<p>
+ The easiest way to get the "right" sysdeps for a target achitecture is
+to natively compile skalibs on that target, and steal the produced sysdeps
+files. You could also (politely) ask for precompiled sysdeps on the
+skaware mailing-list.
+</p>
+
+<p>
+ The most powerful way to get the sysdeps would be to have a
+program such as <em>GNU&nbsp;autoconf</em> automatically generate them
+at build-time. I won't convert skalibs to autoconf, but contributions
+such as autoconf-to-sysdeps scripts are welcome.
+</p>
+
+<p>
+ <a href="http://www.kegel.com/">Dan Kegel</a> has kindly provided some
+<a href="dank-cross-notes.html">step-by-step notes</a> on making sysdeps
+files for your target architecture. With the 1.0.0 release, the skalibs
+build system has somewhat changed and a lot of sysdeps have been added,
+so these notes are obsolete; but they might still be useful to you. 
+</p>
+
+<h2> Launching the cross-compilation process </h2>
+
+<p>
+ So at this point:
+</p>
+
+<ul>
+ <li> You have filled up <tt>conf-compile</tt> with the configuration
+options and flags you need. </li>
+ <li> You have gotten hold of, or hand-made, a predefined set of sysdeps
+in <tt>$SYSDEPSDIR</tt>. </li>
+</ul>
+
+<p>
+ You can't perform <tt>make</tt>, that would launch the native compilation
+process and ignore your <tt>$SYSDEPSDIR</tt>. Instead, skalibs provides
+a script for you to run:
+</p>
+
+<pre>
+  package/crosscompile ${SYSDEPSDIR}
+</pre>
+
+<p>
+ The set of sysdeps in <tt>$SYSDEPSDIR</tt> will be imported into the
+build tree, and the portable sources will be compiled. The header files
+will be produced in the <tt>include</tt> directory, the static library
+files in the <tt>library</tt> directory, and the shared library files,
+if any, in the <tt>library.so</tt> directory. That's it.
+</p>
+
+<h2> Credits </h2>
+
+<p>
+<a href="http://www.kegel.com/">Dan Kegel</a> brought up the need for a
+clean cross-compilation system.
+</p>
+
+</body>
+</html>

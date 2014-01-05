@@ -1,0 +1,2 @@
+#define HAS_GETPTY
+/* sysdep: +_getpty */

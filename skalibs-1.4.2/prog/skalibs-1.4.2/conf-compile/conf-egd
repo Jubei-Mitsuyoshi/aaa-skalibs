@@ -1,0 +1,4 @@
+
+
+ If you want librandom to support the EGD daemon, the first line of this
+file must be the full path to the EGD unix-domain socket.

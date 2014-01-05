@@ -1,0 +1,2 @@
+#define HASEGD "EGD_IPCPATH"
+/* sysdep: +egd */

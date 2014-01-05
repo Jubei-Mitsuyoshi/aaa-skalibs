@@ -1,0 +1,7 @@
+uint32.h
+diuint32.h
+genalloc.h
+buffer.h
+djbunix.h
+cdb.h
+cdb_make.h

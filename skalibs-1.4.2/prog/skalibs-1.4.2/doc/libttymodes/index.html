@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <meta http-equiv="Content-Language" content="en" />
+    <title>skalibs: the ttymodes library interface</title>
+    <meta name="Description" content="skalibs: the ttymodes library interface" />
+    <meta name="Keywords" content="skalibsttymodes libttymodes library interface" />
+    <!-- <link rel="stylesheet" type="text/css" href="http://www.skarnet.org/default.css" /> -->
+  </head>
+<body>
+
+<p>
+<a href="../index.html">skalibs</a><br />
+<a href="http://www.skarnet.org/software/">Software</a><br />
+<a href="http://www.skarnet.org/">www.skarnet.org</a>
+</p>
+
+<h1> The <tt>ttymodes</tt> library interface </h1>
+
+<p>
+<tt>libttymodes</tt> is a small library designed to encapsulate some
+basic terminal manipulation.
+</p>
+
+<h2> Compiling </h2>
+
+<ul>
+ <li> Add <tt>/package/prog/skalibs/include</tt>, or wherever you installed
+your header files, to your header directory list </li>
+ <li> Use <tt>#include "ttymodes.h"</tt></li>
+</ul>
+
+<h2> Linking </h2>
+
+<ul>
+ <li> For static linking: add <tt>/package/prog/skalibs/library</tt>,
+or wherever you installed your .a files, to your library directory list. </li>
+ <li> For dynamic linking: add <tt>/package/prog/skalibs/library.so</tt>,
+or wherever you installed your .so files, to your library directory list -
+and make sure to properly edit your <tt>ld.so.conf</tt> file and to run
+<tt>ldconfig</tt> if needed. </li>
+ <li> Link with <tt>-lttymodes -lstddjb</tt> </li>
+</ul>
+
+<h2> Programming </h2>
+
+<p>
+FIXME: to be completed.
+</p>
+
+</body>
+</html>

@@ -1,0 +1,2 @@
+#define HASOPENAT
+/* sysdep: +openat */

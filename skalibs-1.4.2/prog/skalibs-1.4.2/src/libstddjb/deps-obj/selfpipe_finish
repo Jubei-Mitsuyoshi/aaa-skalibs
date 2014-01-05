@@ -1,0 +1,6 @@
+sysdeps.h
+djbunix.h
+sig.h
+nsig.h
+selfpipe-internal.h
+selfpipe.h

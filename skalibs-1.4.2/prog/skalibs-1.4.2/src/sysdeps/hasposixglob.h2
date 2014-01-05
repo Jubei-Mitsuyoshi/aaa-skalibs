@@ -1,0 +1,2 @@
+#define HASPOSIXGLOB
+/* sysdep: +posixglob */

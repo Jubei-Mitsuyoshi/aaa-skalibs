@@ -1,0 +1,2 @@
+#define HASRDTSC
+/* sysdep: +rdtsc */

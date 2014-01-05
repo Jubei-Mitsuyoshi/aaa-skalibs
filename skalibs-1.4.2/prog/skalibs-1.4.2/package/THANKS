@@ -1,0 +1,49 @@
+Dan J. Bernstein <djb@cr.yp.to>
+ - original code design
+ - Unix software design mentor
+
+William E. Baxter <web@superscript.com>
+ - original libwebipc
+
+Jean Marot <marot@quatramaran.ens.fr>
+ - bugfixes
+
+Paul Jarc <prj@dogmap.org>
+ - bugfixes, suggestions, patches
+
+Nicolas George <cigaes@salle-s.org>
+ - bugfixes
+ - some important security fixes
+ - original libancillary
+
+Taj Khattra <taj.khattra@pobox.com>
+ - bug-reports
+ - documentation fixes
+
+Dan Kegel <dank@kegel.com>
+ - cross-compilation portability advice
+ - doc contribution
+
+Stefan Karrmann <sk@mathematik.uni-ulm.de>
+ - add-ons
+
+Matthew R. Dempsky <mrd@alkemio.org>
+ - bugfixes
+
+David A. Madore <david@madore.org>
+ - portability tests
+ - Unix time guru
+
+Robert Ransom <rransom.8774@gmail.com>
+ - bugfixes
+ 
+Frans Haarman <franshaarman@gmail.com>
+ - portability tests
+ 
+Vincent De Ribou <vins_bozo@yahoo.fr>
+ - bug-reports
+ - libdatastruct testing
+ - help with documentation
+
+Jorge Almeida <jalmeida@math.ist.utl.pt>
+ - bug-reports

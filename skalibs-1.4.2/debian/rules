@@ -1,0 +1,46 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	rm -f $(CURDIR)/prog/skalibs-1.4.2/conf-compile/flag-slashpackage
+		
+	echo "$(CURDIR)/debian/skalibs/usr/bin" > $(CURDIR)/prog/skalibs-1.4.2/conf-compile/conf-install-command
+	
+	echo "$(CURDIR)/debian/skalibs/usr/include/skalibs" > $(CURDIR)/prog/skalibs-1.4.2/conf-compile/conf-install-include
+	
+	echo "$(CURDIR)/debian/skalibs/usr/lib" > $(CURDIR)/prog/skalibs-1.4.2/conf-compile/conf-install-library
+	
+	echo "$(CURDIR)/debian/skalibs/lib" > $(CURDIR)/prog/skalibs-1.4.2/conf-compile/conf-install-library.so
+	
+	echo "$(CURDIR)/debian/skalibs/usr/lib/sysdeps" > $(CURDIR)/prog/skalibs-1.4.2/conf-compile/conf-install-sysdeps
+	cd $(CURDIR)/prog/skalibs-1.4.2 && make
+	
+
+override_dh_auto_install:
+	cd $(CURDIR)/prog/skalibs-1.4.2 && make install
+	
+	
+
+override_dh_auto_clean:
+	rm -f $(CURDIR)/prog/skalibs-1.4.2/conf-compile/conf-install-command
+	
+	rm -f $(CURDIR)/prog/skalibs-1.4.2/conf-compile/conf-install-include
+	
+	rm -f $(CURDIR)/prog/skalibs-1.4.2/conf-compile/conf-install-library
+	
+	rm -f $(CURDIR)/prog/skalibs-1.4.2/conf-compile/conf-install-library.so
+	
+	rm -f $(CURDIR)/prog/skalibs-1.4.2/conf-compile/conf-install-sysdeps
+	
+	cd $(CURDIR)/prog/skalibs-1.4.2 && make distclean
+	cd $(CURDIR)/prog/skalibs-1.4.2 && make clean
+
+override_dh_auto_test:
+#	$(CURDIR)/package/check

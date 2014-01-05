@@ -1,0 +1,2 @@
+#undef HASANCILAUTOCLOSE
+/* sysdep: -ancilautoclose */

@@ -1,0 +1,7 @@
+/* ISC license. */
+
+#ifndef UINT16_H
+#define UINT16_H
+
+#include "uint64.h"
+
